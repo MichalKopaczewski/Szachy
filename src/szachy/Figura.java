@@ -85,9 +85,9 @@ public class Figura extends JLabel {
                         break;
                     }
                 }
-                if ((this.getX() / 70 < 7)  && (plansza[this.getX() / 70 + 1][this.getY() / 70 + 1] == 2)) {
+                if ((this.getX() / 70 < 7) && (this.getY() / 70 < 7) && (plansza[this.getX() / 70 + 1][this.getY() / 70 + 1] == 2)) {
                     ruchy[this.getX() / 70 + 1][this.getY() / 70 + 1] = 4;
-                } else if ((this.getX() / 70 > 0) && (plansza[this.getX() / 70 - 1][this.getY() / 70 + 1] == 2)) {
+                } else if ((this.getX() / 70 > 0) && (this.getY() / 70 < 7)  && (plansza[this.getX() / 70 - 1][this.getY() / 70 + 1] == 2)) {
                     ruchy[this.getX() / 70 - 1][this.getY() / 70 + 1] = 4;
                 }
             } else if (this.idGracza==2) {

@@ -61,24 +61,55 @@ public class Figura extends JLabel {
     }
 
     public void ustalRuch(int[][] plansza) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                System.out.print(plansza[i][j]);
-            }
-            System.out.println("");
-        }
+//        for (int i = 0; i < 8; i++) {
+//            for (int j = 0; j < 8; j++) {
+//                System.out.print(plansza[i][j]);
+//            }
+//            System.out.println("");
+//        }
+            System.out.println(this.getX() / 70);
+            System.out.println(this.getY() / 70);
         if (("wtower".equals(this.nazwa)) || ("btower".equals(this.nazwa))) {
-            ustalenieRuchuWierzy(plansza);
+            ustalenieRuchuWiezy(plansza);
         } else if (("wpawn".equals(this.nazwa)) || ("bpawn".equals(this.nazwa))) {
             ustalenieRuchuPiona(plansza);
         }
+        //wypiszRuch();
     }
     public void ustalenieRuchuPiona(int[][] plansza) {
         if (this.pierwszyRuch) {
-            System.err.println(this.getX() / 70);
-            System.err.println(this.getY() / 70);
+//            System.err.println(this.getX() / 70);
+//            System.err.println(this.getY() / 70);
             if (this.idGracza==1) {
                 for (int i = this.getY() / 70 + 1; i < (this.getY() / 70) + 3; i++) {
+                    if (plansza[this.getX() / 70][i]==0) {
+                        this.ruchy[this.getX() / 70][i] = 1;
+                    } else {
+                        break;
+                    }
+                }
+                if ((this.getX() / 70 < 7) && (this.getY() / 70 < 7) && (plansza[this.getX() / 70 + 1][this.getY() / 70 + 1] == 2)) {
+                    ruchy[this.getX() / 70 + 1][this.getY() / 70 + 1] = 4;
+                } else if ((this.getX() / 70 > 0) && (this.getY() / 70 < 7)  && (plansza[this.getX() / 70 - 1][this.getY() / 70 + 1] == 2)) {
+                    ruchy[this.getX() / 70 - 1][this.getY() / 70 + 1] = 4;
+                }
+            } else if (this.idGracza==2) {
+                for (int i = this.getY() / 70 - 1; i > (this.getY() / 70) - 3; i--) {
+                    if (plansza[this.getX() / 70][i]==0) {
+                        this.ruchy[this.getX() / 70][i] = 1;
+                    } else {
+                        break;
+                    }
+                }
+                if ((this.getX() / 70 > 0) && (this.getY() / 70 > 0) && (plansza[this.getX() / 70 - 1][this.getY() / 70 - 1] == 1)) {
+                    ruchy[this.getX() / 70 - 1][this.getY() / 70 - 1] = 4;
+                } else if ((this.getX() / 70<7) && (this.getY() / 70 > 0) && (plansza[this.getX() / 70 + 1][this.getY() / 70 - 1] == 1)) {
+                    ruchy[this.getX() / 70 + 1][this.getY() / 70 - 1] = 4;
+                }
+            }
+        } else {
+            if (this.idGracza==1) {
+                for (int i = this.getY() / 70 + 1; i < (this.getY() / 70) + 2; i++) {
                     if (plansza[this.getX() / 70][i]==0) {
                         this.ruchy[this.getX() / 70][i] = 1;
                     } else {
@@ -108,7 +139,7 @@ public class Figura extends JLabel {
         
         wypiszRuch();
     }
-    public void ustalenieRuchuWierzy(int[][] plansza) {
+    public void ustalenieRuchuWiezy(int[][] plansza) {
         for (int i = (this.getY() / 70) + 1; i < 8; i++) {
             if (plansza[this.getX() / 70][i]==0) {
                 this.ruchy[this.getX() / 70][i] = 1;
@@ -133,8 +164,8 @@ public class Figura extends JLabel {
             if (plansza[i][this.getY() / 70]==0) {
                 this.ruchy[i][this.getY() / 70] = 1;
             } else {
-                if (this.idGracza != plansza[this.getX() / 70][i]) {
-                    this.ruchy[this.getX() / 70][i] = 4;
+                if (this.idGracza != plansza[i][this.getY() / 70]) {
+                    this.ruchy[i][this.getY() / 70] = 4;
                 }
                 break;
             }
@@ -143,8 +174,8 @@ public class Figura extends JLabel {
             if (plansza[i][this.getY() / 70]==0) {
                 this.ruchy[i][this.getY() / 70] = 1;
             } else {
-                if (this.idGracza != plansza[this.getX() / 70][i]) {
-                    this.ruchy[this.getX() / 70][i] = 4;
+                if (this.idGracza != plansza[i][this.getY() / 70]) {
+                    this.ruchy[i][this.getY() / 70] = 4;
                 }
                 break;
             }
@@ -159,5 +190,10 @@ public class Figura extends JLabel {
             System.out.println("");
         }
     }
+
+    public int[][] getRuchy() {
+        return ruchy;
+    }
+    
     
 }

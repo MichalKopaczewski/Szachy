@@ -33,7 +33,7 @@ public class Plansza extends JPanel implements MouseListener {
         obrazek = createImageIcon("/ikony/chessboard.png");
         wTower1 = new Figura(new Point(0, 0), 1, "wtower", this);
         figury[0][0] = wTower1;
-        wTower2 = new Figura(new Point(6, 5), 1, "wtower", this);               // 7 0
+        wTower2 = new Figura(new Point(7, 0), 1, "wtower", this);
         figury[7][0] = wTower2;
         wHorse1 = new Figura(new Point(1, 0), 1, "whorse", this);
         figury[1][0] = wHorse1;
@@ -51,7 +51,7 @@ public class Plansza extends JPanel implements MouseListener {
         for (int j = 2; j < 6; j++) {
             for (int k = 0; k < 8; k++) {
                 figury[k][j] = new Figura(new Point(k, j));
-                //add(figury[k][j]);
+                add(figury[k][j]);
                 miejscaNaPlanszy[k][j] = 0;
             }
         }
@@ -64,7 +64,7 @@ public class Plansza extends JPanel implements MouseListener {
         add(figury[0][0]);
         miejscaNaPlanszy[0][0] = 1;
         add(figury[7][0]);
-        miejscaNaPlanszy[6][5] = 1;
+        miejscaNaPlanszy[7][0] = 1;
         add(figury[1][0]);
         miejscaNaPlanszy[1][0] = 1;
         add(figury[6][0]);
@@ -77,7 +77,7 @@ public class Plansza extends JPanel implements MouseListener {
         miejscaNaPlanszy[3][0] = 1;
         add(figury[4][0]);
         miejscaNaPlanszy[4][0] = 1;
-        bTower1 = new Figura(new Point(5, 2), 2, "btower", this);               // 0 7
+        bTower1 = new Figura(new Point(0, 7), 2, "btower", this);               // 0 7
         figury[0][7] = bTower1;
         bTower2 = new Figura(new Point(7, 7), 2, "btower", this);
         figury[7][7] = bTower2;
@@ -101,7 +101,7 @@ public class Plansza extends JPanel implements MouseListener {
             miejscaNaPlanszy[i][6] = 2;
         }
         add(figury[0][7]);
-        miejscaNaPlanszy[5][2] = 2;
+        miejscaNaPlanszy[0][7] = 2;
         add(figury[7][7]);
         miejscaNaPlanszy[7][7] = 2;
         add(figury[1][7]);
@@ -121,7 +121,7 @@ public class Plansza extends JPanel implements MouseListener {
         tlo = new JLabel(obrazek);
         tlo.setBounds(0, 0, 560, 560);
         add(tlo);
-        //wypiszMiejscaNaPlanszy();
+        wypiszMiejscaNaPlanszy();
         
     }
     private ImageIcon createImageIcon(String path) {
@@ -140,7 +140,7 @@ public class Plansza extends JPanel implements MouseListener {
     public void mousePressed(MouseEvent me) {
         Figura source = (Figura) me.getComponent();
         System.out.println(source);
-        miejscaNaPlanszy[source.getX() / 70][source.getY() / 70] = 3;
+        //miejscaNaPlanszy[source.getX() / 70][source.getY() / 70] = 3;
         source.ustalRuch(this.miejscaNaPlanszy);
     }
     

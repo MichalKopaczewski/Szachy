@@ -106,15 +106,34 @@ public class Plansza extends JPanel implements MouseListener {
     @Override
     public void mousePressed(MouseEvent me) {
         Figura source = (Figura) me.getComponent();
-//        System.out.println(source);
-//        System.out.println("");
-//        wypiszMiejscaNaPlanszy();
-//        System.out.println("");
+        //System.out.println(source);
+        if ( (aktualnaFigura!= null) && source.getIdGracza()!=0 && source.getIdGracza()!=aktualnaFigura.getIdGracza()) {
+            System.out.println(source);
+            System.out.println();
+            int posX = source.getX() / 70, posY = source.getY() / 70;
+            int aktX = aktualnaFigura.getX() / 70, aktY = aktualnaFigura.getY() / 70;
+            remove(aktualnaFigura);
+            remove(source);
+            wygasPola();
+            wylaczPustePola();
+            validate();
+            repaint();
+            validate();
+            figury[aktX][aktY] = new Figura(new Point(aktX, aktY), 0, this);
+            aktualnaFigura.setLocation(posX * 70, posY * 70);
+            aktualnaFigura.setPierwszyRuch(false);
+            aktualnaFigura.setStan(false);
+            figury[posX][posY] = new Figura(aktualnaFigura, this);
+            add(figury[posX][posY], 2);                                 // przetestowac
+            wlaczPozostalePionki(figury[posX][posY]);
+            wygasPola();
+            wylaczPustePola();
+            source.removeMouseListener(this);
+            wypiszMiejscaNaPlanszy();
+        } else
         if (source.getIdGracza()==0) {
             int posX = source.getX() / 70, posY = source.getY() / 70;
             int aktX = aktualnaFigura.getX() / 70, aktY = aktualnaFigura.getY() / 70;
-//            System.out.println(figury[posX][posY]);
-//            System.out.println(aktualnaFigura);
             remove(aktualnaFigura);
             remove(figury[posX][posY]);
             wygasPola();
@@ -125,16 +144,12 @@ public class Plansza extends JPanel implements MouseListener {
             figury[aktX][aktY] = new Figura(new Point(aktX, aktY), 0, this);
             aktualnaFigura.setLocation(posX * 70, posY * 70);
             aktualnaFigura.setPierwszyRuch(false);
-            figury[posX][posY] = new Figura(aktualnaFigura);
-            figury[posX][posY].addMouseListener(this);
+            aktualnaFigura.setStan(false);
+            figury[posX][posY] = new Figura(aktualnaFigura, this);
             add(figury[posX][posY], 2);                                 // przetestowac
-//            for (int i = 0; i < 8; i++) {
-//                for (int j = 0; j < 8; j++) {
-//                    System.out.print(figury[i][j].getIdGracza()+ " ");
-//                }
-//                System.out.println("");
-//            }
-//            System.out.println("cos1");
+            wlaczPozostalePionki(figury[posX][posY]);
+            wygasPola();
+            wylaczPustePola();
         } else if (source.getIdGracza()==1 || source.getIdGracza()==2){
             if (source.isStan()==false) {
                 wylaczPozostalePionki(source);
@@ -145,9 +160,7 @@ public class Plansza extends JPanel implements MouseListener {
                 wlaczPustePola(source.getRuchy());
                 aktualnaFigura = source;
 
-            //System.out.println("cos2");
             } else {
-            //System.out.println("cos3");
                 wlaczPozostalePionki(source);
                 source.setStan(false);
                 wygasPola();
@@ -155,9 +168,6 @@ public class Plansza extends JPanel implements MouseListener {
                 aktualnaFigura = null;
             }
         }
-//        System.out.println("");
-//        wypiszMiejscaNaPlanszy();
-//        System.out.println("");
     }
     
     @Override
@@ -186,7 +196,9 @@ public class Plansza extends JPanel implements MouseListener {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (pola[i][j]==4) {
+                    figury[i][j].removeMouseListener(this);
                     figury[i][j].setEnabled(true);
+                    figury[i][j].addMouseListener(this);
                 }
             }
         }
@@ -232,7 +244,7 @@ public class Plansza extends JPanel implements MouseListener {
     public void wlaczPozostalePionki(Figura figura) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if ((figury[i][j]!=figura && figury[i][j].getIdGracza()!=0)) {
+                if ((!(figury[i][j].equals(figura)) && figury[i][j].getIdGracza()!=0)) {
                     figury[i][j].addMouseListener(this);
                 }
                 figury[i][j].setEnabled(true);
@@ -260,7 +272,7 @@ public class Plansza extends JPanel implements MouseListener {
     public void wypiszMiejscaNaPlanszy() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                System.out.print(figury[i][j]);
+                System.out.print(figury[i][j].getIdGracza());
             }
             System.out.println("");
         }

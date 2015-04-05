@@ -41,10 +41,9 @@ public class Figura extends JLabel{
         this.idGracza = idGracza;
         setOpaque(false);
         addMouseListener(ml);
-//        setBackground(Color.green);
     }
 
-    public Figura(Figura figura) {
+    public Figura(Figura figura, MouseListener ml) {
         this.idGracza = figura.getIdGracza();
         this.setLocation(figura.getX(), figura.getY());
         this.setSize(figura.getWidth(), figura.getHeight());
@@ -53,30 +52,21 @@ public class Figura extends JLabel{
         this.obrazek = figura.getObrazek();
         setIcon(obrazek);
         this.pierwszyRuch = figura.isPierwszyRuch();
-        
+        addMouseListener(ml);
     }
     
     
     private ImageIcon createImageIcon(String path) {
         URL imgURL = getClass().getResource(path);
         if (imgURL != null) {
-            //System.err.println("Plik jest w" + path);
             return new ImageIcon(imgURL);
         }
         else {
-            //System.err.println("Pliku nie ma w /src" + path);
             return null; 
         }
     }
 
     public void ustalRuch(Figura[][] plansza) {
-//        for (int i = 0; i < 8; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                System.out.print(plansza[i][j]);
-//            }
-//            System.out.println("");
-//        }
-        
         ruchy = new int[8][8];
         for (int i=0; i<8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -152,8 +142,6 @@ public class Figura extends JLabel{
                 }
             }
         }
-            wypiszRuch();
-            System.out.println("");
     }
     public void ustalenieRuchuWiezy(Figura[][] plansza) {
         for (int i = (this.getY() / 70) + 1; i < 8; i++) {

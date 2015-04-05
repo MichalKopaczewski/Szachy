@@ -2,6 +2,7 @@ package szachy;
 
 import szachy.menuBar.MenuBar;
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 
 /**
@@ -27,10 +28,12 @@ public class OknoAplikacji extends JFrame{
     private MenuBar menuBar;
     private PanelPrzyciskow panelPrzyciskow,panelCzasow,panelKomunikatow;
     private Plansza panelPlanszy;
-
+    private Icon obrazek;
+    private JLabel tlo;
     public OknoAplikacji(String nazwaOkna) {
         super(nazwaOkna);
         setLayout(null);
+        
         inicjalizacjaRamki(X_RAMKI, Y_RAMKI, SZEROKOSC_RAMKI, WYSOKOSC_RAMKI);
         inicjalizacjaOrazDodanieMenuBara();
         panelPlanszy = new Plansza(X_PLANSZY , Y_PLANSZY, SZEROKOSC_PLANSZY, WYSOKOSC_PLANSZY);
@@ -60,5 +63,16 @@ public class OknoAplikacji extends JFrame{
         setBounds(x, y, szerokosc + insets.left + insets.right, wysokosc + insets.top + insets.bottom);
         setResizable(false);
     }
-        
+       
+    private ImageIcon createImageIcon(String path) {
+        URL imgURL = getClass().getResource(path);
+        if (imgURL != null) {
+            //System.err.println("Plik jest w" + path);
+            return new ImageIcon(imgURL);
+        }
+        else {
+            //System.err.println("Pliku nie ma w /src" + path);
+            return null; 
+        }
+    } 
 }

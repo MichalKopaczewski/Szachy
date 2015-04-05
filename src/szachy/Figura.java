@@ -9,12 +9,11 @@ import javax.swing.*;
  *
  * @author Michal
  */
-public class Figura extends JLabel {
+public class Figura extends JLabel{
     private final int MNOZNIK_POLA=70;
-    private Point pozycja;
     private int idGracza;
-    private Dimension rozmiarFigury = new Dimension(70, 70);
-    private Dimension rozmiarPustegoPola = new Dimension(60, 60);
+    private int szerokosc = 70, wysokosc=70;
+    private int szerPustego = 60, wysPustego = 60;
     private String nazwa;
     private Icon obrazek;
     private boolean stan,pierwszyRuch;
@@ -22,9 +21,9 @@ public class Figura extends JLabel {
     //mozliwe ruchy
 
     public Figura(Point pozycja, int idGracza, String nazwa, MouseListener ml) {
-        this.pozycja = new Point(pozycja.x * MNOZNIK_POLA, pozycja.y * MNOZNIK_POLA);
-        this.setLocation(this.pozycja);
-        this.setSize(rozmiarFigury);
+        
+        this.setLocation(new Point(pozycja.x * MNOZNIK_POLA, pozycja.y * MNOZNIK_POLA));
+        this.setSize(szerokosc, wysokosc);
         addMouseListener(ml);
         this.idGracza = idGracza;
         this.nazwa = nazwa;
@@ -33,20 +32,30 @@ public class Figura extends JLabel {
         this.obrazek = createImageIcon("/ikony/" + this.nazwa + ".png");
         this.setIcon(this.obrazek);
         this.pierwszyRuch = true;
-        ruchy = new int[8][8];
-        for (int i=0; i<8; i++) {
-            for (int j = 0; j < 8; j++) {
-                ruchy[j][i]=0;
-            }
-        }
+        
     }
-    public Figura(Point pozycja) {
-        this.pozycja = new Point(pozycja.x * MNOZNIK_POLA + 5, pozycja.y * MNOZNIK_POLA + 5);
-        this.setLocation(this.pozycja);
-        this.setSize(rozmiarPustegoPola);
-        setOpaque(true);
-        setBackground(Color.green);
+    public Figura(Point pozycja, int idGracza, MouseListener ml) {
+        
+        this.setLocation(new Point(pozycja.x * MNOZNIK_POLA + 5, pozycja.y * MNOZNIK_POLA + 5));
+        this.setSize(szerPustego, wysPustego);
+        this.idGracza = idGracza;
+        setOpaque(false);
+        addMouseListener(ml);
+//        setBackground(Color.green);
     }
+
+    public Figura(Figura figura) {
+        this.idGracza = figura.getIdGracza();
+        this.setLocation(figura.getX(), figura.getY());
+        this.setSize(figura.getWidth(), figura.getHeight());
+        this.nazwa = figura.getNazwa();
+        this.stan = figura.isStan();
+        this.obrazek = figura.getObrazek();
+        setIcon(obrazek);
+        this.pierwszyRuch = figura.isPierwszyRuch();
+        
+    }
+    
     
     private ImageIcon createImageIcon(String path) {
         URL imgURL = getClass().getResource(path);
@@ -60,15 +69,20 @@ public class Figura extends JLabel {
         }
     }
 
-    public void ustalRuch(int[][] plansza) {
+    public void ustalRuch(Figura[][] plansza) {
 //        for (int i = 0; i < 8; i++) {
 //            for (int j = 0; j < 8; j++) {
 //                System.out.print(plansza[i][j]);
 //            }
 //            System.out.println("");
 //        }
-            System.out.println(this.getX() / 70);
-            System.out.println(this.getY() / 70);
+        
+        ruchy = new int[8][8];
+        for (int i=0; i<8; i++) {
+            for (int j = 0; j < 8; j++) {
+                ruchy[j][i]=0;
+            }
+        }
         if (("wtower".equals(this.nazwa)) || ("btower".equals(this.nazwa))) {
             ustalenieRuchuWiezy(plansza);
         } else if (("wpawn".equals(this.nazwa)) || ("bpawn".equals(this.nazwa))) {
@@ -76,111 +90,112 @@ public class Figura extends JLabel {
         }
         //wypiszRuch();
     }
-    public void ustalenieRuchuPiona(int[][] plansza) {
+    public void ustalenieRuchuPiona(Figura[][] plansza) {
         if (this.pierwszyRuch) {
-//            System.err.println(this.getX() / 70);
-//            System.err.println(this.getY() / 70);
             if (this.idGracza==1) {
                 for (int i = this.getY() / 70 + 1; i < (this.getY() / 70) + 3; i++) {
-                    if (plansza[this.getX() / 70][i]==0) {
+                    if (plansza[this.getX() / 70][i].getIdGracza()==0) {
                         this.ruchy[this.getX() / 70][i] = 1;
                     } else {
                         break;
                     }
                 }
-                if ((this.getX() / 70 < 7) && (this.getY() / 70 < 7) && (plansza[this.getX() / 70 + 1][this.getY() / 70 + 1] == 2)) {
+                if ((this.getX() / 70 < 7) && (this.getY() / 70 < 7) && (plansza[this.getX() / 70 + 1][this.getY() / 70 + 1].getIdGracza() == 2)) {
                     ruchy[this.getX() / 70 + 1][this.getY() / 70 + 1] = 4;
-                } else if ((this.getX() / 70 > 0) && (this.getY() / 70 < 7)  && (plansza[this.getX() / 70 - 1][this.getY() / 70 + 1] == 2)) {
+                }
+                if ((this.getX() / 70 > 0) && (this.getY() / 70 < 7)  && (plansza[this.getX() / 70 - 1][this.getY() / 70 + 1].getIdGracza() == 2)) {
                     ruchy[this.getX() / 70 - 1][this.getY() / 70 + 1] = 4;
                 }
             } else if (this.idGracza==2) {
                 for (int i = this.getY() / 70 - 1; i > (this.getY() / 70) - 3; i--) {
-                    if (plansza[this.getX() / 70][i]==0) {
+                    if (plansza[this.getX() / 70][i].getIdGracza()==0) {
                         this.ruchy[this.getX() / 70][i] = 1;
                     } else {
                         break;
                     }
                 }
-                if ((this.getX() / 70 > 0) && (this.getY() / 70 > 0) && (plansza[this.getX() / 70 - 1][this.getY() / 70 - 1] == 1)) {
+                if ((this.getX() / 70 > 0) && (this.getY() / 70 > 0) && (plansza[this.getX() / 70 - 1][this.getY() / 70 - 1].getIdGracza() == 1)) {
                     ruchy[this.getX() / 70 - 1][this.getY() / 70 - 1] = 4;
-                } else if ((this.getX() / 70<7) && (this.getY() / 70 > 0) && (plansza[this.getX() / 70 + 1][this.getY() / 70 - 1] == 1)) {
+                }
+                if ((this.getX() / 70<7) && (this.getY() / 70 > 0) && (plansza[this.getX() / 70 + 1][this.getY() / 70 - 1].getIdGracza() == 1)) {
                     ruchy[this.getX() / 70 + 1][this.getY() / 70 - 1] = 4;
                 }
             }
         } else {
             if (this.idGracza==1) {
                 for (int i = this.getY() / 70 + 1; i < (this.getY() / 70) + 2; i++) {
-                    if (plansza[this.getX() / 70][i]==0) {
+                    if (plansza[this.getX() / 70][i].getIdGracza()==0) {
                         this.ruchy[this.getX() / 70][i] = 1;
                     } else {
                         break;
                     }
                 }
-                if ((this.getX() / 70 < 7) && (this.getY() / 70 < 7) && (plansza[this.getX() / 70 + 1][this.getY() / 70 + 1] == 2)) {
+                if ((this.getX() / 70 < 7) && (this.getY() / 70 < 7) && (plansza[this.getX() / 70 + 1][this.getY() / 70 + 1].getIdGracza() == 2)) {
                     ruchy[this.getX() / 70 + 1][this.getY() / 70 + 1] = 4;
-                } else if ((this.getX() / 70 > 0) && (this.getY() / 70 < 7)  && (plansza[this.getX() / 70 - 1][this.getY() / 70 + 1] == 2)) {
+                }
+                if ((this.getX() / 70 > 0) && (this.getY() / 70 < 7)  && (plansza[this.getX() / 70 - 1][this.getY() / 70 + 1].getIdGracza() == 2)) {
                     ruchy[this.getX() / 70 - 1][this.getY() / 70 + 1] = 4;
                 }
             } else if (this.idGracza==2) {
-                for (int i = this.getY() / 70 - 1; i > (this.getY() / 70) - 3; i--) {
-                    if (plansza[this.getX() / 70][i]==0) {
+                for (int i = this.getY() / 70 - 1; i > (this.getY() / 70) - 2; i--) {
+                    if (plansza[this.getX() / 70][i].getIdGracza()==0) {
                         this.ruchy[this.getX() / 70][i] = 1;
                     } else {
                         break;
                     }
                 }
-                if ((this.getX() / 70 > 0) && (this.getY() / 70 > 0) && (plansza[this.getX() / 70 - 1][this.getY() / 70 - 1] == 1)) {
+                if ((this.getX() / 70 > 0) && (this.getY() / 70 > 0) && (plansza[this.getX() / 70 - 1][this.getY() / 70 - 1].getIdGracza() == 1)) {
                     ruchy[this.getX() / 70 - 1][this.getY() / 70 - 1] = 4;
-                } else if ((this.getX() / 70<7) && (this.getY() / 70 > 0) && (plansza[this.getX() / 70 + 1][this.getY() / 70 - 1] == 1)) {
+                }
+                if ((this.getX() / 70<7) && (this.getY() / 70 > 0) && (plansza[this.getX() / 70 + 1][this.getY() / 70 - 1].getIdGracza() == 1)) {
                     ruchy[this.getX() / 70 + 1][this.getY() / 70 - 1] = 4;
                 }
             }
         }
-        
-        wypiszRuch();
+            wypiszRuch();
+            System.out.println("");
     }
-    public void ustalenieRuchuWiezy(int[][] plansza) {
+    public void ustalenieRuchuWiezy(Figura[][] plansza) {
         for (int i = (this.getY() / 70) + 1; i < 8; i++) {
-            if (plansza[this.getX() / 70][i]==0) {
+            if (plansza[this.getX() / 70][i].getIdGracza()==0) {
                 this.ruchy[this.getX() / 70][i] = 1;
             } else {
-                if (this.idGracza != plansza[this.getX() / 70][i]) {
+                if (this.idGracza != plansza[this.getX() / 70][i].getIdGracza()) {
                     this.ruchy[this.getX() / 70][i] = 4;
                 }
                 break;
             }
         }
         for (int i = (this.getY() / 70) - 1; i >=0 ; i--) {
-            if (plansza[this.getX() / 70][i]==0) {
+            if (plansza[this.getX() / 70][i].getIdGracza()==0) {
                 this.ruchy[this.getX() / 70][i] = 1;
             } else {
-                if (this.idGracza != plansza[this.getX() / 70][i]) {
+                if (this.idGracza != plansza[this.getX() / 70][i].getIdGracza()) {
                     this.ruchy[this.getX() / 70][i] = 4;
                 }
                 break;
             }
         }
         for (int i = (this.getX() / 70) - 1; i >= 0 ; i--) {
-            if (plansza[i][this.getY() / 70]==0) {
+            if (plansza[i][this.getY() / 70].getIdGracza()==0) {
                 this.ruchy[i][this.getY() / 70] = 1;
             } else {
-                if (this.idGracza != plansza[i][this.getY() / 70]) {
+                if (this.idGracza != plansza[i][this.getY() / 70].getIdGracza()) {
                     this.ruchy[i][this.getY() / 70] = 4;
                 }
                 break;
             }
         }
         for (int i = (this.getX() / 70) + 1; i < 8 ; i++) {
-            if (plansza[i][this.getY() / 70]==0) {
+            if (plansza[i][this.getY() / 70].getIdGracza()==0) {
                 this.ruchy[i][this.getY() / 70] = 1;
             } else {
-                if (this.idGracza != plansza[i][this.getY() / 70]) {
+                if (this.idGracza != plansza[i][this.getY() / 70].getIdGracza()) {
                     this.ruchy[i][this.getY() / 70] = 4;
                 }
                 break;
             }
         }
-        wypiszRuch();
     }
     public void wypiszRuch() {
         for (int i = 0; i < 8; i++) {
@@ -191,9 +206,41 @@ public class Figura extends JLabel {
         }
     }
 
+    public void setPierwszyRuch(boolean pierwszyRuch) {
+        this.pierwszyRuch = pierwszyRuch;
+    }
+
+    public boolean isPierwszyRuch() {
+        return pierwszyRuch;
+    }
+
+    public String getNazwa() {
+        return nazwa;
+    }
+
     public int[][] getRuchy() {
         return ruchy;
     }
-    
-    
+
+    public void setStan(boolean stan) {
+        this.stan = stan;
+    }
+
+    public boolean isStan() {
+        return stan;
+    }
+
+    public int getIdGracza() {
+        return idGracza;
+    }
+
+    public Icon getObrazek() {
+        return obrazek;
+    }
+
+    @Override
+    public void setLocation(Point point) {
+        super.setLocation(point); //To change body of generated methods, choose Tools | Templates.
+    }
+        
 }

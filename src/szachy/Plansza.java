@@ -24,6 +24,7 @@ public class Plansza extends JPanel implements MouseListener {
     private Figura[] bPionki;
     private Figura[][] figury;
     private Figura aktualnaFigura;
+    private boolean czyKolejBialego=true;
     
     public Plansza(int x, int y, int szerokosc, int wysokosc) {
         setBounds(x, y, szerokosc, wysokosc);
@@ -102,6 +103,8 @@ public class Plansza extends JPanel implements MouseListener {
         
         //add(tlo);
         add(tlo);
+        //usunListenerBialych(this);
+        usunListenerCzarnych(this);
     }
     @Override
     public void mousePressed(MouseEvent me) {
@@ -129,8 +132,9 @@ public class Plansza extends JPanel implements MouseListener {
             wygasPola();
             wylaczPustePola();
             source.removeMouseListener(this);
-            wypiszMiejscaNaPlanszy();
+            //wypiszMiejscaNaPlanszy();
             aktualnaFigura = null;
+            zmianaKolejki();
         } else if (source.getIdGracza()==0) {
             int posX = source.getX() / 70, posY = source.getY() / 70;
             int aktX = aktualnaFigura.getX() / 70, aktY = aktualnaFigura.getY() / 70;
@@ -151,6 +155,7 @@ public class Plansza extends JPanel implements MouseListener {
             wygasPola();
             wylaczPustePola();
             aktualnaFigura = null;
+            zmianaKolejki();
         } else if (source.getIdGracza()==1 || source.getIdGracza()==2){
             if (source.isStan()==false) {
                 wylaczPozostalePionki(source);
@@ -169,6 +174,7 @@ public class Plansza extends JPanel implements MouseListener {
                 aktualnaFigura = null;
             }
         }
+        System.out.println(czyKolejBialego);
     }
     
     @Override
@@ -185,6 +191,57 @@ public class Plansza extends JPanel implements MouseListener {
 
     @Override
     public void mouseExited(MouseEvent me) {
+    }
+    public void zmianaKolejki() {
+        if (this.czyKolejBialego==true) {
+            this.czyKolejBialego = false;
+            usunListenerBialych(this);
+            ustawListenerCzarnych(this);
+        } else {
+            this.czyKolejBialego=true;
+            usunListenerCzarnych(this);
+            ustawListenerBialych(this);
+        }
+    }
+    public void usunListenerBialych(MouseListener ml) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (figury[i][j].getIdGracza()==1) {
+                    figury[i][j].removeMouseListener(ml);
+                    figury[i][j].removeMouseListener(ml);
+                }
+            }
+        }
+    }
+    public void ustawListenerBialych(MouseListener ml) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (figury[i][j].getIdGracza()==1) {
+                    figury[i][j].removeMouseListener(ml);
+                    figury[i][j].addMouseListener(ml);
+                }
+            }
+        }
+    }
+    public void usunListenerCzarnych(MouseListener ml) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (figury[i][j].getIdGracza()==2) {
+                    figury[i][j].removeMouseListener(ml);
+                    figury[i][j].removeMouseListener(ml);
+                }
+            }
+        }
+    }
+    public void ustawListenerCzarnych(MouseListener ml) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (figury[i][j].getIdGracza()==2) {
+                    figury[i][j].removeMouseListener(ml);
+                    figury[i][j].addMouseListener(ml);
+                }
+            }
+        }
     }
     public void wygasPola() {
         for (int i = 0; i < 8; i++) {
@@ -227,7 +284,10 @@ public class Plansza extends JPanel implements MouseListener {
             for (int j = 0; j < 8; j++) {
                 if (i!=figura.getX()/70 || j!=figura.getY()/70) {
                     figury[i][j].setEnabled(false);
-                    figury[i][j].removeMouseListener(this);
+                    if (figury[i][j].getMouseListeners().length!=0) {
+                        figury[i][j].removeMouseListener(this);
+                        
+                    }
                 }
             }
         }

@@ -1,9 +1,15 @@
 package szachy;
 
+import szachy.ruchy.RuchGonca;
 import java.awt.*;
 import java.awt.event.MouseListener;
 import java.net.URL;
 import javax.swing.*;
+import szachy.ruchy.RuchKonia;
+import szachy.ruchy.RuchKrola;
+import szachy.ruchy.RuchKrolowej;
+import szachy.ruchy.RuchPionka;
+import szachy.ruchy.RuchWiezy;
 
 /**
  *
@@ -74,326 +80,25 @@ public class Figura extends JLabel{
             }
         }
         if ("wtower".equals(this.nazwa) || "btower".equals(this.nazwa)) {
-            ustalenieRuchuWiezy(plansza);
+            //ustalenieRuchuWiezy(plansza);
+            this.ruchy = RuchWiezy.ustalRuch(this, plansza);
         } else if ("wpawn".equals(this.nazwa) || "bpawn".equals(this.nazwa)) {
-            ustalenieRuchuPiona(plansza);
+            this.ruchy = RuchPionka.ustalRuch(this, plansza);
+            //ustalenieRuchuPiona(plansza);
         } else if ("whorse".equals(this.nazwa) || "bhorse".equals(this.nazwa)) {
-            ustalenieRuchuKonia(plansza);
+            //ustalenieRuchuKonia(plansza);
+            this.ruchy = RuchKonia.ustalRuch(this, plansza);
         } else if ("wbishop".equals(this.nazwa) || "bbishop".equals(this.nazwa)) {
-            ustalenieRuchuGonca(plansza);
+            //ustalenieRuchuGonca(plansza);
+            this.ruchy = RuchGonca.ustalRuch(this, plansza);
         } else if ("wqueen".equals(this.nazwa) || "bqueen".equals(this.nazwa)) {
-            ustalenieRuchuKrolowej(plansza);
+            //ustalenieRuchuKrolowej(plansza);
+            this.ruchy = RuchKrolowej.ustalRuch(this, plansza);
         } else if ("wking".equals(this.nazwa) || "bking".equals(this.nazwa)) {
-            ustalenieRuchuKrola(plansza);
+            //ustalenieRuchuKrola(plansza);
+            this.ruchy = RuchKrola.ustalRuch(this, plansza);
         }
-        wypiszRuch();
-    }
-    public void ustalenieRuchuKrolowej(Figura[][] plansza) {
-        ustalenieRuchuWiezy(plansza);
-        ustalenieRuchuGonca(plansza);
-    }
-    public void ustalenieRuchuKrola(Figura[][] plansza) {
-        int x = this.getX() / 70, y = this.getY() / 70;
-        System.out.println(String.valueOf(x) + " " + String.valueOf(y));
-        if (x>0 && y>0 && x<7 && y<7) {
-            ustawBicieNaPolu(plansza, x-1, y);
-            ustawBicieNaPolu(plansza, x-1, y+1);
-            ustawBicieNaPolu(plansza, x, y+1);
-            ustawBicieNaPolu(plansza, x+1, y+1);
-            ustawBicieNaPolu(plansza, x+1, y);
-            ustawBicieNaPolu(plansza, x+1, y-1);
-            ustawBicieNaPolu(plansza, x, y-1);
-            ustawBicieNaPolu(plansza, x-1, y-1);
-        } else if (x==0 && y>0 && y<7) {
-            ustawBicieNaPolu(plansza, x, y+1);
-            ustawBicieNaPolu(plansza, x+1, y+1);
-            ustawBicieNaPolu(plansza, x+1, y);
-            ustawBicieNaPolu(plansza, x+1, y-1);
-            ustawBicieNaPolu(plansza, x, y-1);
-        } else if (x==7 && y>0 && y<7) {
-            ustawBicieNaPolu(plansza, x-1, y);
-            ustawBicieNaPolu(plansza, x-1, y+1);
-            ustawBicieNaPolu(plansza, x, y+1);
-            ustawBicieNaPolu(plansza, x, y-1);
-            ustawBicieNaPolu(plansza, x-1, y-1);
-        } else if (y==7 && x>0 && x<7) {
-            ustawBicieNaPolu(plansza, x-1, y);
-            ustawBicieNaPolu(plansza, x+1, y);
-            ustawBicieNaPolu(plansza, x+1, y-1);
-            ustawBicieNaPolu(plansza, x, y-1);
-            ustawBicieNaPolu(plansza, x-1, y-1);
-        } else if (y==0 && x>0 && x<7) {
-            ustawBicieNaPolu(plansza, x-1, y);
-            ustawBicieNaPolu(plansza, x-1, y+1);
-            ustawBicieNaPolu(plansza, x, y+1);
-            ustawBicieNaPolu(plansza, x+1, y+1);
-            ustawBicieNaPolu(plansza, x+1, y);
-        } else if (x==0 && y==0) {
-            ustawBicieNaPolu(plansza, x, y+1);
-            ustawBicieNaPolu(plansza, x+1, y+1);
-            ustawBicieNaPolu(plansza, x+1, y);
-        } else if (x==7 && y==0) {
-            ustawBicieNaPolu(plansza, x-1, y);
-            ustawBicieNaPolu(plansza, x-1, y+1);
-            ustawBicieNaPolu(plansza, x, y+1);
-        } else if (x==7 && y==7) {
-            ustawBicieNaPolu(plansza, x-1, y);
-            ustawBicieNaPolu(plansza, x, y-1);
-            ustawBicieNaPolu(plansza, x-1, y-1);
-        } else if (x==0 && y==7) {
-            ustawBicieNaPolu(plansza, x+1, y);
-            ustawBicieNaPolu(plansza, x+1, y-1);
-            ustawBicieNaPolu(plansza, x, y-1);
-        }
-        this.wypiszRuch();
-    }
-    public void ustawBicieNaPolu(Figura[][] plansza, int xB, int yB) {
-        int x = this.getX() / 70, y = this.getY() / 70;
-        if (plansza[xB][yB].getIdGracza()==0) {
-            ruchy[xB][yB] = 1;
-        } else if (plansza[xB][yB].getIdGracza()!=this.getIdGracza()) {
-            ruchy[xB][yB] = 4;
-        }
-    }
-    public void ustalenieRuchuGonca(Figura[][] plansza) {
-        int x = this.getX() / 70, y = this.getY() / 70;
-        System.out.println(String.valueOf(x) + " " + String.valueOf(y));
-        int i,j;
-        if (x>0 && y<7) {
-            j = y + 1;
-            for (i = x-1; i >= 0; i--) {
-                if (plansza[i][j].getIdGracza()==0) {
-                    ruchy[i][j]=1;
-                } else if (plansza[i][j].getIdGracza()!=this.getIdGracza()) {
-                    ruchy[i][j]=4;
-                    break;
-                } else if (plansza[i][j].getIdGracza()==this.getIdGracza()) {
-                    break;
-                }
-                j++;
-                if (j==8) {
-                    break;
-                }
-            }
-        }
-        if (x<7 && y<7) {
-            j = y + 1;
-            for (i = x+1; i < 8; i++) {
-                if (plansza[i][j].getIdGracza()==0) {
-                    ruchy[i][j]=1;
-                } else if (plansza[i][j].getIdGracza()!=this.getIdGracza()) {
-                    ruchy[i][j]=4;
-                    break;
-                } else if (plansza[i][j].getIdGracza()==this.getIdGracza()) {
-                    break;
-                }
-                j++;
-                if (j==8) {
-                    break;
-                }
-            }
-        }
-        if (x<7 && y>0) {
-            j = y - 1;
-            for (i = x+1; i < 8; i++) {
-                if (plansza[i][j].getIdGracza()==0) {
-                    ruchy[i][j]=1;
-                } else if (plansza[i][j].getIdGracza()!=this.getIdGracza()) {
-                    ruchy[i][j]=4;
-                    break;
-                } else if (plansza[i][j].getIdGracza()==this.getIdGracza()) {
-                    break;
-                }
-                j--;
-                if (j==-1) {
-                    break;
-                }
-            }
-        }
-        if (x>0 && y>0) {
-            j = y - 1;
-            for (i = x-1; i >= 0; i--) {
-                if (plansza[i][j].getIdGracza()==0) {
-                    ruchy[i][j]=1;
-                } else if (plansza[i][j].getIdGracza()!=this.getIdGracza()) {
-                    ruchy[i][j]=4;
-                    break;
-                } else if (plansza[i][j].getIdGracza()==this.getIdGracza()) {
-                    break;
-                }
-                j--;
-                if (j==-1) {
-                    break;
-                }
-            }
-        }
-    }
-    
-    public void ustalenieRuchuPiona(Figura[][] plansza) {
-        int x = this.getX() / 70, y = this.getY() / 70;
-        if (this.pierwszyRuch) {
-            if (this.idGracza==1) {
-                for (int i = y + 1; i < y + 3; i++) {
-                    if (plansza[x][i].getIdGracza()==0) {
-                        this.ruchy[x][i] = 1;
-                    } else {
-                        break;
-                    }
-                }
-                if ((x < 7) && (y < 7) && (plansza[x + 1][y + 1].getIdGracza() == 2)) {
-                    ruchy[x + 1][y + 1] = 4;
-                }
-                if ((x > 0) && (y < 7)  && (plansza[x - 1][y + 1].getIdGracza() == 2)) {
-                    ruchy[x - 1][y + 1] = 4;
-                }
-            } else if (this.idGracza==2) {
-                for (int i = y - 1; i > y - 3; i--) {
-                    if (plansza[x][i].getIdGracza()==0) {
-                        this.ruchy[x][i] = 1;
-                    } else {
-                        break;
-                    }
-                }
-                if ((x > 0) && (y > 0) && (plansza[x - 1][y - 1].getIdGracza() == 1)) {
-                    ruchy[x - 1][y - 1] = 4;
-                }
-                if ((x<7) && (y > 0) && (plansza[x + 1][y - 1].getIdGracza() == 1)) {
-                    ruchy[x + 1][y - 1] = 4;
-                }
-            }
-        } else {
-            if (this.idGracza==1) {
-                for (int i = y + 1; i < y + 2; i++) {
-                    if (plansza[x][i].getIdGracza()==0) {
-                        this.ruchy[x][i] = 1;
-                    } else {
-                        break;
-                    }
-                }
-                if ((x < 7) && (y < 7) && (plansza[x + 1][y + 1].getIdGracza() == 2)) {
-                    ruchy[x + 1][y + 1] = 4;
-                }
-                if ((x > 0) && (y < 7)  && (plansza[x - 1][y + 1].getIdGracza() == 2)) {
-                    ruchy[x - 1][y + 1] = 4;
-                }
-            } else if (this.idGracza==2) {
-                for (int i = y - 1; i > y - 2; i--) {
-                    if (plansza[x][i].getIdGracza()==0) {
-                        this.ruchy[x][i] = 1;
-                    } else {
-                        break;
-                    }
-                }
-                if ((x > 0) && (y > 0) && (plansza[x - 1][y - 1].getIdGracza() == 1)) {
-                    ruchy[x - 1][y - 1] = 4;
-                }
-                if ((x<7) && (y > 0) && (plansza[x + 1][y - 1].getIdGracza() == 1)) {
-                    ruchy[x + 1][y - 1] = 4;
-                }
-            }
-        }
-    }
-    public void ustalenieRuchuWiezy(Figura[][] plansza) {
-        int x = this.getX() / 70, y = this.getY() / 70;
-        for (int i = y + 1; i < 8; i++) {
-            if (plansza[x][i].getIdGracza()==0) {
-                this.ruchy[x][i] = 1;
-            } else {
-                if (this.idGracza != plansza[x][i].getIdGracza()) {
-                    this.ruchy[x][i] = 4;
-                }
-                break;
-            }
-        }
-        for (int i = y - 1; i >=0 ; i--) {
-            if (plansza[x][i].getIdGracza()==0) {
-                this.ruchy[x][i] = 1;
-            } else {
-                if (this.idGracza != plansza[x][i].getIdGracza()) {
-                    this.ruchy[x][i] = 4;
-                }
-                break;
-            }
-        }
-        for (int i = x - 1; i >= 0 ; i--) {
-            if (plansza[i][y].getIdGracza()==0) {
-                this.ruchy[i][y] = 1;
-            } else {
-                if (this.idGracza != plansza[i][y].getIdGracza()) {
-                    this.ruchy[i][y] = 4;
-                }
-                break;
-            }
-        }
-        for (int i = x + 1; i < 8 ; i++) {
-            if (plansza[i][y].getIdGracza()==0) {
-                this.ruchy[i][y] = 1;
-            } else {
-                if (this.idGracza != plansza[i][y].getIdGracza()) {
-                    this.ruchy[i][y] = 4;
-                }
-                break;
-            }
-        }
-    }
-    public void ustalenieRuchuKonia(Figura[][] plansza) {
-        int x = this.getX() / 70, y = this.getY() / 70;
-        if (x>1 && y<7) {                                                                      //1
-            if (plansza[x-2][y+1].getIdGracza()==0) {
-                this.ruchy[x-2][y+1]=1;
-            } else if (plansza[x-2][y+1].getIdGracza()!=this.getIdGracza()) {
-                this.ruchy[x-2][y+1]=4;
-            }
-        }
-        if (x>0 && y<6) {                                                                     //2
-            if (plansza[x-1][y+2].getIdGracza()==0) {
-                this.ruchy[x-1][y+2]=1;
-            } else if (plansza[x-1][y+2].getIdGracza()!=this.getIdGracza()) {
-                this.ruchy[x-1][y+2]=4;
-            }
-        }
-        if (x<7 && y<6) {                                                           //3
-            if (plansza[x+1][y+2].getIdGracza()==0) {
-                this.ruchy[x+1][y+2]=1;
-            } else if (plansza[x+1][y+2].getIdGracza()!=this.getIdGracza()) {
-                this.ruchy[x+1][y+2]=4;
-            }
-        }
-        if (x<6 && y<7) {                                                                               //4
-            if (plansza[x+2][y+1].getIdGracza()==0) {
-                this.ruchy[x+2][y+1]=1;
-            } else if (plansza[x+2][y+1].getIdGracza()!=this.getIdGracza()) {
-                this.ruchy[x+2][y+1]=4;
-            }
-        }
-        if (x<6 && y>0) {                                                                          //5
-            if (plansza[x+2][y-1].getIdGracza()==0) {
-                this.ruchy[x+2][y-1]=1;
-            } else if (plansza[x+2][y-1].getIdGracza()!=this.getIdGracza()) {
-                this.ruchy[x+2][y-1]=4;
-            }
-        }
-        if (x<7 && y>1) {                                                                          //6
-            if (plansza[x+1][y-2].getIdGracza()==0) {
-                this.ruchy[x+1][y-2]=1;
-            } else if (plansza[x+1][y-2].getIdGracza()!=this.getIdGracza()) {
-                this.ruchy[x+1][y-2]=4;
-            }
-        }
-        if (x>0 && y>1) {                                                                         //7
-            if (plansza[x-1][y-2].getIdGracza()==0) {
-                this.ruchy[x-1][y-2]=1;
-            } else if (plansza[x-1][y-2].getIdGracza()!=this.getIdGracza()) {
-                this.ruchy[x-1][y-2]=4;
-            }
-        }
-        if (x>1 && y>0) {                                                                         //8
-            if (plansza[x-2][y-1].getIdGracza()==0) {
-                this.ruchy[x-2][y-1]=1;
-            } else if (plansza[x-2][y-1].getIdGracza()!=this.getIdGracza()) {
-                this.ruchy[x-2][y-1]=4;
-            }
-        }
+        //wypiszRuch();
     }
     public void wypiszRuch() {
         for (int i = 0; i < 8; i++) {

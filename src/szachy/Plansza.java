@@ -130,8 +130,8 @@ public class Plansza extends JPanel implements MouseListener {
             wylaczPustePola();
             source.removeMouseListener(this);
             wypiszMiejscaNaPlanszy();
-        } else
-        if (source.getIdGracza()==0) {
+            aktualnaFigura = null;
+        } else if (source.getIdGracza()==0) {
             int posX = source.getX() / 70, posY = source.getY() / 70;
             int aktX = aktualnaFigura.getX() / 70, aktY = aktualnaFigura.getY() / 70;
             remove(aktualnaFigura);
@@ -150,6 +150,7 @@ public class Plansza extends JPanel implements MouseListener {
             wlaczPozostalePionki(figury[posX][posY]);
             wygasPola();
             wylaczPustePola();
+            aktualnaFigura = null;
         } else if (source.getIdGracza()==1 || source.getIdGracza()==2){
             if (source.isStan()==false) {
                 wylaczPozostalePionki(source);

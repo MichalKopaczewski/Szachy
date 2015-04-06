@@ -433,6 +433,7 @@ public class Figura extends JLabel{
     }
 
     public Icon getObrazek() {
+        int a;
         return obrazek;
     }
 

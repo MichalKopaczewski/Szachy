@@ -11,9 +11,9 @@ import javax.swing.*;
  */
 
 public class OknoAplikacji extends JFrame{
-    public static final int MARGINES=20, WYSOKOSC_MENU_BAR=25; 
+    public static final int MARGINES=15, WYSOKOSC_MENU_BAR=25; 
     public static final int WYSOKOSC_PANELI = 40;
-    public static final int SZEROKOSC_PLANSZY=560, WYSOKOSC_PLANSZY=560,X_PLANSZY=MARGINES,Y_PLANSZY=MARGINES + WYSOKOSC_MENU_BAR;
+    public static final int SZEROKOSC_PLANSZY=400, WYSOKOSC_PLANSZY=400,X_PLANSZY=MARGINES,Y_PLANSZY=MARGINES + WYSOKOSC_MENU_BAR;
     public static final int X_PANELU_PRZYCISKOW = MARGINES, Y_PANELU_PRZYCISKOW = 2 * MARGINES + WYSOKOSC_PLANSZY + WYSOKOSC_MENU_BAR;
     public static final int SZEROKOSC_PANELU_PRZYCISKOW = SZEROKOSC_PLANSZY, WYSOKOSC_PANELU_PRZYCISKOW = WYSOKOSC_PANELI;
     public static final int X_PANELU_CZASOW = MARGINES, Y_PANELU_CZASOW = 3 * MARGINES + WYSOKOSC_PLANSZY + WYSOKOSC_MENU_BAR + WYSOKOSC_PANELU_PRZYCISKOW;
@@ -61,7 +61,7 @@ public class OknoAplikacji extends JFrame{
         Insets insets;
         insets = getInsets();
         setBounds(x, y, szerokosc + insets.left + insets.right, wysokosc + insets.top + insets.bottom);
-        setResizable(false);
+        //setResizable(false);
     }
        
     private ImageIcon createImageIcon(String path) {

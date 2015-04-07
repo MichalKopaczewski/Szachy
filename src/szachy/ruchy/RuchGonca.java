@@ -16,7 +16,7 @@ public class RuchGonca {
                 ruchy[j][i]=0;
             }
         }
-        int x = figura.getX() / 70, y = figura.getY() / 70;
+        int x = figura.getX() / 50, y = figura.getY() / 50;
         System.out.println(String.valueOf(x) + " " + String.valueOf(y));
         int i,j;
         if (x>0 && y<7) {
@@ -25,7 +25,11 @@ public class RuchGonca {
                 if (plansza[i][j].getIdGracza()==0) {
                     ruchy[i][j]=1;
                 } else if (plansza[i][j].getIdGracza()!=figura.getIdGracza()) {
-                    ruchy[i][j]=4;
+                    if (plansza[i][j].getNazwa().endsWith("king")) {
+                        ruchy[i][j]=5;
+                    } else {
+                        ruchy[i][j]=4;
+                    }
                     break;
                 } else if (plansza[i][j].getIdGracza()==figura.getIdGracza()) {
                     break;
@@ -42,7 +46,11 @@ public class RuchGonca {
                 if (plansza[i][j].getIdGracza()==0) {
                     ruchy[i][j]=1;
                 } else if (plansza[i][j].getIdGracza()!=figura.getIdGracza()) {
-                    ruchy[i][j]=4;
+                    if (plansza[i][j].getNazwa().endsWith("king")) {
+                        ruchy[i][j]=5;
+                    } else {
+                        ruchy[i][j]=4;
+                    }
                     break;
                 } else if (plansza[i][j].getIdGracza()==figura.getIdGracza()) {
                     break;
@@ -59,7 +67,11 @@ public class RuchGonca {
                 if (plansza[i][j].getIdGracza()==0) {
                     ruchy[i][j]=1;
                 } else if (plansza[i][j].getIdGracza()!=figura.getIdGracza()) {
-                    ruchy[i][j]=4;
+                    if (plansza[i][j].getNazwa().endsWith("king")) {
+                        ruchy[i][j]=5;
+                    } else {
+                        ruchy[i][j]=4;
+                    }
                     break;
                 } else if (plansza[i][j].getIdGracza()==figura.getIdGracza()) {
                     break;
@@ -76,7 +88,11 @@ public class RuchGonca {
                 if (plansza[i][j].getIdGracza()==0) {
                     ruchy[i][j]=1;
                 } else if (plansza[i][j].getIdGracza()!=figura.getIdGracza()) {
-                    ruchy[i][j]=4;
+                    if (plansza[i][j].getNazwa().endsWith("king")) {
+                        ruchy[i][j]=5;
+                    } else {
+                        ruchy[i][j]=4;
+                    }
                     break;
                 } else if (plansza[i][j].getIdGracza()==figura.getIdGracza()) {
                     break;

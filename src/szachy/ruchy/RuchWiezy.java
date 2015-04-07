@@ -15,13 +15,17 @@ public class RuchWiezy {
                 ruchy[j][i]=0;
             }
         }
-        int x = figura.getX() / 70, y = figura.getY() / 70;
+        int x = figura.getX() / 50, y = figura.getY() / 50;
         for (int i = y + 1; i < 8; i++) {
             if (plansza[x][i].getIdGracza()==0) {
                 ruchy[x][i] = 1;
             } else {
                 if (figura.getIdGracza() != plansza[x][i].getIdGracza()) {
-                    ruchy[x][i] = 4;
+                    if (plansza[x][i].getNazwa().endsWith("king")) {
+                        ruchy[x][i] = 5;
+                    } else {
+                        ruchy[x][i] = 4; 
+                    }
                 }
                 break;
             }
@@ -31,7 +35,11 @@ public class RuchWiezy {
                 ruchy[x][i] = 1;
             } else {
                 if (figura.getIdGracza() != plansza[x][i].getIdGracza()) {
-                    ruchy[x][i] = 4;
+                    if (plansza[x][i].getNazwa().endsWith("king")) {
+                        ruchy[x][i] = 5;
+                    } else {
+                        ruchy[x][i] = 4; 
+                    }
                 }
                 break;
             }
@@ -41,7 +49,11 @@ public class RuchWiezy {
                 ruchy[i][y] = 1;
             } else {
                 if (figura.getIdGracza() != plansza[i][y].getIdGracza()) {
-                    ruchy[i][y] = 4;
+                    if (plansza[i][y].getNazwa().endsWith("king")) {
+                        ruchy[i][y] = 5;
+                    } else {
+                        ruchy[i][y] = 4; 
+                    }
                 }
                 break;
             }
@@ -51,7 +63,11 @@ public class RuchWiezy {
                 ruchy[i][y] = 1;
             } else {
                 if (figura.getIdGracza() != plansza[i][y].getIdGracza()) {
-                    ruchy[i][y] = 4;
+                    if (plansza[i][y].getNazwa().endsWith("king")) {
+                        ruchy[i][y] = 5;
+                    } else {
+                        ruchy[i][y] = 4; 
+                    }
                 }
                 break;
             }

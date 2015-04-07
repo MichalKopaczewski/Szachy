@@ -15,7 +15,7 @@ public class RuchKrola {
                 ruchy[j][i]=0;
             }
         }
-        int x = figura.getX() / 70, y = figura.getY() / 70;
+        int x = figura.getX() / 50, y = figura.getY() / 50;
         System.out.println(String.valueOf(x) + " " + String.valueOf(y));
         if (x>0 && y>0 && x<7 && y<7) {
             ruchy[x-1][y] = ustawBicieNaPolu(figura, plansza, x-1, y);
@@ -74,7 +74,11 @@ public class RuchKrola {
         if (plansza[xB][yB].getIdGracza()==0) {
             return 1;
         } else if (plansza[xB][yB].getIdGracza()!=figura.getIdGracza()) {
-            return 4;
+            if (plansza[xB][yB].getNazwa().endsWith("king")) {
+                return 5;
+            } else {
+                return 4;
+            }
         } else {
             return 0;
         }

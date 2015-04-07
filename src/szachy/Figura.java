@@ -16,10 +16,10 @@ import szachy.ruchy.RuchWiezy;
  * @author Michal
  */
 public class Figura extends JLabel{
-    private final int MNOZNIK_POLA=70;
+    private final int MNOZNIK_POLA=50;
     private int idGracza;
-    private int szerokosc = 70, wysokosc=70;
-    private int szerPustego = 60, wysPustego = 60;
+    private int szerokosc = 50, wysokosc=50;
+    private int szerPustego = 40, wysPustego = 40;
     private String nazwa;
     private Icon obrazek;
     private boolean stan,pierwszyRuch;
@@ -61,17 +61,6 @@ public class Figura extends JLabel{
         addMouseListener(ml);
     }
     
-    
-    private ImageIcon createImageIcon(String path) {
-        URL imgURL = getClass().getResource(path);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL);
-        }
-        else {
-            return null; 
-        }
-    }
-
     public void ustalRuch(Figura[][] plansza) {
         ruchy = new int[8][8];
         for (int i=0; i<8; i++) {
@@ -79,31 +68,38 @@ public class Figura extends JLabel{
                 ruchy[j][i]=0;
             }
         }
-        if ("wtower".equals(this.nazwa) || "btower".equals(this.nazwa)) {
-            //ustalenieRuchuWiezy(plansza);
-            this.ruchy = RuchWiezy.ustalRuch(this, plansza);
-        } else if ("wpawn".equals(this.nazwa) || "bpawn".equals(this.nazwa)) {
-            this.ruchy = RuchPionka.ustalRuch(this, plansza);
-            //ustalenieRuchuPiona(plansza);
-        } else if ("whorse".equals(this.nazwa) || "bhorse".equals(this.nazwa)) {
-            //ustalenieRuchuKonia(plansza);
-            this.ruchy = RuchKonia.ustalRuch(this, plansza);
-        } else if ("wbishop".equals(this.nazwa) || "bbishop".equals(this.nazwa)) {
-            //ustalenieRuchuGonca(plansza);
-            this.ruchy = RuchGonca.ustalRuch(this, plansza);
-        } else if ("wqueen".equals(this.nazwa) || "bqueen".equals(this.nazwa)) {
-            //ustalenieRuchuKrolowej(plansza);
-            this.ruchy = RuchKrolowej.ustalRuch(this, plansza);
-        } else if ("wking".equals(this.nazwa) || "bking".equals(this.nazwa)) {
-            //ustalenieRuchuKrola(plansza);
-            this.ruchy = RuchKrola.ustalRuch(this, plansza);
+        if (null != this.nazwa) switch (this.nazwa) {
+            case "wtower":
+            case "btower":
+                this.ruchy = RuchWiezy.ustalRuch(this, plansza);
+                break;
+            case "wpawn":
+            case "bpawn":
+                this.ruchy = RuchPionka.ustalRuch(this, plansza);
+                break;
+            case "whorse":
+            case "bhorse":
+                this.ruchy = RuchKonia.ustalRuch(this, plansza);
+                break;
+            case "wbishop":
+            case "bbishop":
+                this.ruchy = RuchGonca.ustalRuch(this, plansza);
+                break;
+            case "wqueen":
+            case "bqueen":
+                this.ruchy = RuchKrolowej.ustalRuch(this, plansza);
+                break;
+            case "wking":
+            case "bking":
+                this.ruchy = RuchKrola.ustalRuch(this, plansza);
+                break;
         }
-        //wypiszRuch();
+        wypiszRuch();
     }
     public void wypiszRuch() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                System.out.print(ruchy[i][j]);
+                System.out.print(ruchy[i][j] + " ");
             }
             System.out.println("");
         }
@@ -140,6 +136,16 @@ public class Figura extends JLabel{
     public Icon getObrazek() {
         int a;
         return obrazek;
+    }
+
+    private ImageIcon createImageIcon(String path) {
+        URL imgURL = getClass().getResource(path);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL);
+        }
+        else {
+            return null; 
+        }
     }
 
 

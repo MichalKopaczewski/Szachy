@@ -25,6 +25,8 @@ public class Plansza extends JPanel implements MouseListener {
     private Figura[][] figury;
     private Figura aktualnaFigura;
     private boolean czyKolejBialego=true;
+    private boolean czySzach=false;
+    private int xSzacha,ySzacha;
     
     public Plansza(int x, int y, int szerokosc, int wysokosc) {
         setBounds(x, y, szerokosc, wysokosc);
@@ -32,7 +34,7 @@ public class Plansza extends JPanel implements MouseListener {
         figury = new Figura[8][8];
         obrazek = createImageIcon("/ikony/chessboard.png");
         tlo = new JLabel(obrazek);
-        tlo.setBounds(0, 0, 560, 560);
+        tlo.setBounds(0, 0, szerokosc, wysokosc);
         wTower1 = new Figura(new Point(0, 0), 1, "wtower", this);
         figury[0][0] = wTower1;
         wTower2 = new Figura(new Point(7, 0), 1, "wtower", this);
@@ -45,10 +47,10 @@ public class Plansza extends JPanel implements MouseListener {
         figury[2][0] = wBishop1;
         wBishop2 = new Figura(new Point(5, 0), 1, "wbishop", this);
         figury[5][0] = wBishop2;
-        wKing = new Figura(new Point(3, 0), 1, "wking", this);
-        figury[3][0] = wKing;
-        wQueen = new Figura(new Point(4, 0), 1, "wqueen", this);
-        figury[4][0] = wQueen;
+        wKing = new Figura(new Point(4, 0), 1, "wking", this);
+        figury[4][0] = wKing;
+        wQueen = new Figura(new Point(3, 0), 1, "wqueen", this);
+        figury[3][0] = wQueen;
         wPionki = new Figura[8];
         for (int j = 2; j < 6; j++) {
             for (int k = 0; k < 8; k++) {
@@ -99,65 +101,36 @@ public class Plansza extends JPanel implements MouseListener {
         add(figury[5][7]);
         add(figury[3][7]);
         add(figury[4][7]);
-        //wypiszMiejscaNaPlanszy();
-        
-        //add(tlo);
         add(tlo);
-        //usunListenerBialych(this);
         usunListenerCzarnych(this);
     }
     @Override
     public void mousePressed(MouseEvent me) {
         Figura source = (Figura) me.getComponent();
-        //System.out.println(source);
-        if ( (aktualnaFigura!= null) && source.getIdGracza()!=0 && source.getIdGracza()!=aktualnaFigura.getIdGracza()) {
-            System.out.println(source);
-            System.out.println();
-            int posX = source.getX() / 70, posY = source.getY() / 70;
-            int aktX = aktualnaFigura.getX() / 70, aktY = aktualnaFigura.getY() / 70;
-            remove(aktualnaFigura);
-            remove(source);
-            wygasPola();
-            wylaczPustePola();
-            validate();
-            repaint();
-            validate();
-            figury[aktX][aktY] = new Figura(new Point(aktX, aktY), 0, this);
-            aktualnaFigura.setLocation(posX * 70, posY * 70);
-            aktualnaFigura.setPierwszyRuch(false);
-            aktualnaFigura.setStan(false);
-            figury[posX][posY] = new Figura(aktualnaFigura, this);
-            add(figury[posX][posY], 2);                                 // przetestowac
-            wlaczPozostalePionki(figury[posX][posY]);
-            wygasPola();
-            wylaczPustePola();
-            source.removeMouseListener(this);
-            //wypiszMiejscaNaPlanszy();
-            aktualnaFigura = null;
-            zmianaKolejki();
-        } else if (source.getIdGracza()==0) {
-            int posX = source.getX() / 70, posY = source.getY() / 70;
-            int aktX = aktualnaFigura.getX() / 70, aktY = aktualnaFigura.getY() / 70;
-            remove(aktualnaFigura);
+        System.out.println(source);
+        if ( (aktualnaFigura!= null) && source.getIdGracza()!=aktualnaFigura.getIdGracza()) {
+            int posX = source.getX() / 50, posY = source.getY() / 50;
+            int aktX = aktualnaFigura.getX() / 50, aktY = aktualnaFigura.getY() / 50;
+            remove(figury[aktX][aktY]);
             remove(figury[posX][posY]);
-            wygasPola();
-            wylaczPustePola();
-            validate();
-            repaint();
-            validate();
-            figury[aktX][aktY] = new Figura(new Point(aktX, aktY), 0, this);
-            aktualnaFigura.setLocation(posX * 70, posY * 70);
+            wygasPola(aktualnaFigura.getRuchy());
+            wylaczPustePola(aktualnaFigura.getRuchy());
+            wygasBicia(aktualnaFigura.getRuchy());
+            figury[aktX][aktY] = new Figura(new Point(aktX, aktY), 0, null);
+            add(figury[aktX][aktY], 2);
+            aktualnaFigura.setLocation(posX * 50, posY * 50);
             aktualnaFigura.setPierwszyRuch(false);
             aktualnaFigura.setStan(false);
-            figury[posX][posY] = new Figura(aktualnaFigura, this);
-            add(figury[posX][posY], 2);                                 // przetestowac
-            wlaczPozostalePionki(figury[posX][posY]);
-            wygasPola();
-            wylaczPustePola();
+            aktualnaFigura.removeMouseListener(this);
+            figury[posX][posY] = new Figura(aktualnaFigura, null);
+            figury[posX][posY].setEnabled(false);
+            add(figury[posX][posY], 2);                   
             aktualnaFigura = null;
             zmianaKolejki();
+            validate();
         } else if (source.getIdGracza()==1 || source.getIdGracza()==2){
             if (source.isStan()==false) {
+                
                 wylaczPozostalePionki(source);
                 source.setStan(true);
                 source.ustalRuch(this.figury);
@@ -165,16 +138,19 @@ public class Plansza extends JPanel implements MouseListener {
                 podswietlBicia(source.getRuchy());
                 wlaczPustePola(source.getRuchy());
                 aktualnaFigura = source;
+                validate();
 
             } else {
                 wlaczPozostalePionki(source);
                 source.setStan(false);
-                wygasPola();
-                wylaczPustePola();
+                wygasPola(source.getRuchy());
+                wylaczPustePola(source.getRuchy());
+                wygasBicia(source.getRuchy());
                 aktualnaFigura = null;
+                validate();
             }
         }
-        System.out.println(czyKolejBialego);
+        repaint();
     }
     
     @Override
@@ -192,14 +168,23 @@ public class Plansza extends JPanel implements MouseListener {
     @Override
     public void mouseExited(MouseEvent me) {
     }
+    public boolean sprawdzSzacha(int[][] ruchy) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (ruchy[i][j]==5) {
+                    czySzach=true;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public void zmianaKolejki() {
         if (this.czyKolejBialego==true) {
             this.czyKolejBialego = false;
-            usunListenerBialych(this);
             ustawListenerCzarnych(this);
         } else {
             this.czyKolejBialego=true;
-            usunListenerCzarnych(this);
             ustawListenerBialych(this);
         }
     }
@@ -217,8 +202,8 @@ public class Plansza extends JPanel implements MouseListener {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (figury[i][j].getIdGracza()==1) {
-                    figury[i][j].removeMouseListener(ml);
                     figury[i][j].addMouseListener(ml);
+                    figury[i][j].setEnabled(true);
                 }
             }
         }
@@ -228,7 +213,6 @@ public class Plansza extends JPanel implements MouseListener {
             for (int j = 0; j < 8; j++) {
                 if (figury[i][j].getIdGracza()==2) {
                     figury[i][j].removeMouseListener(ml);
-                    figury[i][j].removeMouseListener(ml);
                 }
             }
         }
@@ -237,16 +221,19 @@ public class Plansza extends JPanel implements MouseListener {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (figury[i][j].getIdGracza()==2) {
-                    figury[i][j].removeMouseListener(ml);
                     figury[i][j].addMouseListener(ml);
+                    figury[i][j].setEnabled(true);
                 }
             }
         }
     }
-    public void wygasPola() {
+    public void wygasPola(int pola[][]) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                figury[i][j].setOpaque(false);
+                if (pola[i][j]==1) {
+                    figury[i][j].setOpaque(false);
+                    
+                }
             }
         }
     }
@@ -254,27 +241,44 @@ public class Plansza extends JPanel implements MouseListener {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (pola[i][j]==4) {
-                    figury[i][j].removeMouseListener(this);
+                    figury[i][j].setEnabled(true);
+                    figury[i][j].addMouseListener(this);
+                } else if (pola[i][j]==5) {
                     figury[i][j].setEnabled(true);
                     figury[i][j].addMouseListener(this);
                 }
             }
         }
     }
-    public void dodajFigureDoPlanszy(Figura figura) {
-        add(figura);
+    public void wygasBicia(int pola[][]) {                  //sprawdzic
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (pola[i][j]==4) {
+                    figury[i][j].setEnabled(false);
+                    figury[i][j].removeMouseListener(this);
+                } else if (pola[i][j]==5) {
+                    figury[i][j].setEnabled(false);
+                    figury[i][j].removeMouseListener(this);
+                }
+            }
+        }
     }
     public void podswietlPustePola(int pola[][]) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (pola[i][j]==1) {
-                    //System.out.println("ale");
-                    if (figury[i][j].isValid()==false) {
-                        add(figury[i][j]);
-                    }
-                   figury[i][j].setOpaque(true);
-                   figury[i][j].setBackground(Color.yellow);
-                    //System.out.println(figury[i][j]);
+                    figury[i][j].setOpaque(true);
+                    figury[i][j].setBackground(Color.yellow);
+                }
+            }
+        }
+    }
+    public void wlaczPozostalePionki(Figura figura) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if ((i!=figura.getX()/50 || j!=figura.getY()/50) && figura.getIdGracza()==figury[i][j].getIdGracza()) {
+                    figury[i][j].setEnabled(true);
+                    figury[i][j].addMouseListener(this);
                 }
             }
         }
@@ -282,12 +286,9 @@ public class Plansza extends JPanel implements MouseListener {
     public void wylaczPozostalePionki(Figura figura) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (i!=figura.getX()/70 || j!=figura.getY()/70) {
+                if (i!=figura.getX()/50 || j!=figura.getY()/50) {
                     figury[i][j].setEnabled(false);
-                    if (figury[i][j].getMouseListeners().length!=0) {
-                        figury[i][j].removeMouseListener(this);
-                        
-                    }
+                    figury[i][j].removeMouseListener(this);
                 }
             }
         }
@@ -302,29 +303,19 @@ public class Plansza extends JPanel implements MouseListener {
             }
         }
     }
-    public void wlaczPozostalePionki(Figura figura) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if ((!(figury[i][j].equals(figura)) && figury[i][j].getIdGracza()!=0)) {
-                    figury[i][j].addMouseListener(this);
-                }
-                figury[i][j].setEnabled(true);
-            }
-        }
-    }
     public void wlaczPustePola(int[][] ruchy) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (ruchy[i][j] == 1 && figury[i][j].getIdGracza()==0) {
+                if (ruchy[i][j] == 1) {
                     figury[i][j].addMouseListener(this);
                 }
             }
         }
     }
-    public void wylaczPustePola() {
+    public void wylaczPustePola(int[][] ruchy) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (figury[i][j].getIdGracza()==0) {
+                if (ruchy[i][j] == 1) {
                     figury[i][j].removeMouseListener(this);
                 }
             }
@@ -333,7 +324,7 @@ public class Plansza extends JPanel implements MouseListener {
     public void wypiszMiejscaNaPlanszy() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                System.out.print(figury[i][j].getIdGracza());
+                System.out.print(figury[i][j].getBackground().getRGB() + " ");
             }
             System.out.println("");
         }
@@ -341,11 +332,11 @@ public class Plansza extends JPanel implements MouseListener {
     private ImageIcon createImageIcon(String path) {
         URL imgURL = getClass().getResource(path);
         if (imgURL != null) {
-            //System.err.println("Plik jest w" + path);
+            System.err.println("Plik jest w" + path);
             return new ImageIcon(imgURL);
         }
         else {
-            //System.err.println("Pliku nie ma w /src" + path);
+            System.err.println("Pliku nie ma w /src" + path);
             return null; 
         }
     }

@@ -9,14 +9,8 @@ import javax.swing.*;
  *
  * @author Michal
  */
-/*  plansza:
-        kolumna,wiersz
-    tablica:
-        wiersz, kolumna
-*/
-
 public class Plansza extends JPanel implements MouseListener {
-    private Icon obrazek;
+    public static Icon obrazek;
     private JLabel tlo;
     private Figura wTower1, wBishop1, wHorse1, wKing, wQueen, wTower2, wBishop2, wHorse2;
     private Figura[] wPionki;
@@ -25,14 +19,11 @@ public class Plansza extends JPanel implements MouseListener {
     private Figura[][] figury;
     private Figura aktualnaFigura;
     private boolean czyKolejBialego=true;
-    private boolean czySzach=false;
-    private int xSzacha,ySzacha;
     
     public Plansza(int x, int y, int szerokosc, int wysokosc) {
         setBounds(x, y, szerokosc, wysokosc);
         setLayout(null);
         figury = new Figura[8][8];
-        obrazek = createImageIcon("/ikony/chessboard.png");
         tlo = new JLabel(obrazek);
         tlo.setBounds(0, 0, szerokosc, wysokosc);
         wTower1 = new Figura(new Point(0, 0), 1, "wtower", this);
@@ -102,8 +93,10 @@ public class Plansza extends JPanel implements MouseListener {
         add(figury[3][7]);
         add(figury[4][7]);
         add(tlo);
+        repaint();
         usunListenerCzarnych(this);
     }
+
     @Override
     public void mousePressed(MouseEvent me) {
         Figura source = (Figura) me.getComponent();
@@ -111,6 +104,10 @@ public class Plansza extends JPanel implements MouseListener {
         if ( (aktualnaFigura!= null) && source.getIdGracza()!=aktualnaFigura.getIdGracza()) {
             int posX = source.getX() / 50, posY = source.getY() / 50;
             int aktX = aktualnaFigura.getX() / 50, aktY = aktualnaFigura.getY() / 50;
+            if (aktualnaFigura.getRuchy()[posX][posY]==5) {
+                System.out.println("bicie");
+                koniecGry(source);
+            }
             remove(figury[aktX][aktY]);
             remove(figury[posX][posY]);
             wygasPola(aktualnaFigura.getRuchy());
@@ -124,10 +121,16 @@ public class Plansza extends JPanel implements MouseListener {
             aktualnaFigura.removeMouseListener(this);
             figury[posX][posY] = new Figura(aktualnaFigura, null);
             figury[posX][posY].setEnabled(false);
-            add(figury[posX][posY], 2);                   
-            aktualnaFigura = null;
-            zmianaKolejki();
-            validate();
+            add(figury[posX][posY], 2);    
+            if (aktualnaFigura.getRuchy()[posX][posY]==5) {
+                System.out.println("bicie");
+                koniecGry(source);
+            } else {
+                aktualnaFigura = null;
+
+                zmianaKolejki();
+                validate();
+            }           
         } else if (source.getIdGracza()==1 || source.getIdGracza()==2){
             if (source.isStan()==false) {
                 
@@ -167,17 +170,6 @@ public class Plansza extends JPanel implements MouseListener {
 
     @Override
     public void mouseExited(MouseEvent me) {
-    }
-    public boolean sprawdzSzacha(int[][] ruchy) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (ruchy[i][j]==5) {
-                    czySzach=true;
-                    return true;
-                }
-            }
-        }
-        return false;
     }
     public void zmianaKolejki() {
         if (this.czyKolejBialego==true) {
@@ -329,7 +321,7 @@ public class Plansza extends JPanel implements MouseListener {
             System.out.println("");
         }
     }
-    private ImageIcon createImageIcon(String path) {
+    public ImageIcon createImageIcon(String path) {
         URL imgURL = getClass().getResource(path);
         if (imgURL != null) {
             System.err.println("Plik jest w" + path);
@@ -339,6 +331,17 @@ public class Plansza extends JPanel implements MouseListener {
             System.err.println("Pliku nie ma w /src" + path);
             return null; 
         }
+    }
+    public void koniecGry(Figura figura) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                figury[i][j].removeMouseListener(this);
+            }
+        }
+        Icon obrazekWygranego = createImageIcon("/ikony/bialy.png");
+        JLabel wygrany = new JLabel(obrazekWygranego);
+        wygrany.setBounds(50, 125, 300, 150);
+        add(wygrany, 2);
     }
 
 

@@ -146,8 +146,5 @@ public class Figura extends JLabel{
         else {
             return null; 
         }
-    }
-
-
-        
+    } 
 }

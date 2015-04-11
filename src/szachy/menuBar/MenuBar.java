@@ -115,7 +115,6 @@ public class MenuBar extends JMenuBar implements ActionListener{
         informacje[2] = "Autor: Michał Kopaczewski";
         JOptionPane.showMessageDialog(parentFrame, informacje, "O grze", JOptionPane.INFORMATION_MESSAGE);
     }
-
     public void wyswietlOknoZasad() {
         String[] informacje = new String[7];
         informacje[0] = "Grę rozpoczyna Biały, następnie gracze wykonują ruchy na zmianę." ;
@@ -130,11 +129,9 @@ public class MenuBar extends JMenuBar implements ActionListener{
     public ImageIcon createImageIcon(String path) {
         URL imgURL = getClass().getResource(path);
         if (imgURL != null) {
-            System.err.println("Plik jest w" + path);
             return new ImageIcon(imgURL);
         }
         else {
-            System.err.println("Pliku nie ma w /src" + path);
             return null; 
         }
     }

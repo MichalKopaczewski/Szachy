@@ -19,15 +19,14 @@ public class RuchKrolowej {
         int ruchyG[][] = RuchGonca.ustalRuch(figura, plansza);
         for (int i=0; i<8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (ruchyW[i][j]!=0) {
-                    ruchy[i][j]=ruchyW[i][j];
-                }
                 if (ruchyG[i][j]!=0) {
                     ruchy[i][j]=ruchyG[i][j];
                 }
+                if (ruchyW[i][j]!=0) {
+                    ruchy[i][j]=ruchyW[i][j];
+                }
             }
         }
-        
         return ruchy;
     }
 }

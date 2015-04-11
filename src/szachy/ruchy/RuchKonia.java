@@ -6,6 +6,14 @@ import szachy.Figura;
  *
  * @author Michal
  */
+/*
+       8    1
+   7            2
+          K
+   6            3
+       5    4
+
+*/
 public class RuchKonia {
     public static int[][] ustalRuch(Figura figura, Figura[][] plansza) {
         int ruchy[][];

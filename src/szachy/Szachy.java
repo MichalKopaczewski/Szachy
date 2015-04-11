@@ -9,7 +9,6 @@ public class Szachy {
             public void run() {
                 OknoAplikacji okno = new OknoAplikacji("Szachy");
             }
-            
         });
     }
     

@@ -17,7 +17,6 @@ public class RuchGonca {
             }
         }
         int x = figura.getX() / 50, y = figura.getY() / 50;
-        System.out.println(String.valueOf(x) + " " + String.valueOf(y));
         int i,j;
         if (x>0 && y<7) {
             j = y + 1;

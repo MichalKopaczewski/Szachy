@@ -27,30 +27,31 @@ public class Plansza extends JPanel implements MouseListener {
         tlo = new JLabel(obrazek);
         tlo.setBounds(0, 0, szerokosc, wysokosc);
         wTower1 = new Figura(new Point(0, 0), 1, "wtower", this);
-        figury[0][0] = wTower1;
         wTower2 = new Figura(new Point(7, 0), 1, "wtower", this);
-        figury[7][0] = wTower2;
         wHorse1 = new Figura(new Point(1, 0), 1, "whorse", this);
-        figury[1][0] = wHorse1;
         wHorse2 = new Figura(new Point(6, 0), 1, "whorse", this);
-        figury[6][0] = wHorse2;
         wBishop1 = new Figura(new Point(2, 0), 1, "wbishop", this);
-        figury[2][0] = wBishop1;
         wBishop2 = new Figura(new Point(5, 0), 1, "wbishop", this);
+        wKing = new Figura(new Point(3, 0), 1, "wking", this);
+        wQueen = new Figura(new Point(4, 0), 1, "wqueen", this);
+        figury[0][0] = wTower1;
+        figury[7][0] = wTower2;
+        figury[1][0] = wHorse1;
+        figury[6][0] = wHorse2;
+        figury[2][0] = wBishop1;
         figury[5][0] = wBishop2;
-        wKing = new Figura(new Point(4, 0), 1, "wking", this);
-        figury[4][0] = wKing;
-        wQueen = new Figura(new Point(3, 0), 1, "wqueen", this);
-        figury[3][0] = wQueen;
+        figury[3][0] = wKing;
+        figury[4][0] = wQueen;
         wPionki = new Figura[8];
-        for (int j = 2; j < 6; j++) {
-            for (int k = 0; k < 8; k++) {
-                figury[k][j] = new Figura(new Point(k, j), 0, null);
-                add(figury[k][j]);
+        for (int i = 2; i < 6; i++) {
+            for (int j = 0; j < 8; j++) {
+                figury[j][i] = new Figura(new Point(j, i), 0, null);
+                add(figury[j][i]);
             }
         }
         for (int i = 0; i < 8; i++) {
-            wPionki[i] = new Figura(new Point(i, 1), 1, "wpawn", this);
+//            wPionki[i] = new Figura(new Point(i, 1), 1, "wpawn", this);
+            wPionki[i] = new Figura(new Point(i, 1), 0, null);
             figury[i][1] = wPionki[i];
             add(figury[i][1]);
         }
@@ -62,25 +63,26 @@ public class Plansza extends JPanel implements MouseListener {
         add(figury[5][0]);
         add(figury[3][0]);
         add(figury[4][0]);
-        bTower1 = new Figura(new Point(0, 7), 2, "btower", this);               // 0 7
-        figury[0][7] = bTower1;
+        bTower1 = new Figura(new Point(0, 7), 2, "btower", this);
         bTower2 = new Figura(new Point(7, 7), 2, "btower", this);
-        figury[7][7] = bTower2;
         bHorse1 = new Figura(new Point(1, 7), 2, "bhorse", this);
-        figury[1][7] = bHorse1;
         bHorse2 = new Figura(new Point(6, 7), 2, "bhorse", this);
-        figury[6][7] = bHorse2;
         bBishop1 = new Figura(new Point(2, 7), 2, "bbishop", this);
-        figury[2][7] = bBishop1;
         bBishop2 = new Figura(new Point(5, 7), 2, "bbishop", this);
-        figury[5][7] = bBishop2;
         bKing = new Figura(new Point(3, 7), 2, "bking", this);
-        figury[3][7] = bKing;
         bQueen = new Figura(new Point(4, 7), 2, "bqueen", this);
+        figury[0][7] = bTower1;
+        figury[7][7] = bTower2;
+        figury[1][7] = bHorse1;
+        figury[6][7] = bHorse2;
+        figury[2][7] = bBishop1;
+        figury[5][7] = bBishop2;
+        figury[3][7] = bKing;
         figury[4][7] = bQueen;
         bPionki = new Figura[8];
         for (int i = 0; i < 8; i++) {
-            bPionki[i] = new Figura(new Point(i, 6), 2, "bpawn", this);
+//            bPionki[i] = new Figura(new Point(i, 6), 2, "bpawn", this);
+            bPionki[i] = new Figura(new Point(i, 6), 0, null);
             figury[i][6] = bPionki[i];
             add(figury[i][6]);
         }
@@ -100,12 +102,10 @@ public class Plansza extends JPanel implements MouseListener {
     @Override
     public void mousePressed(MouseEvent me) {
         Figura source = (Figura) me.getComponent();
-        System.out.println(source);
         if ( (aktualnaFigura!= null) && source.getIdGracza()!=aktualnaFigura.getIdGracza()) {
             int posX = source.getX() / 50, posY = source.getY() / 50;
             int aktX = aktualnaFigura.getX() / 50, aktY = aktualnaFigura.getY() / 50;
             if (aktualnaFigura.getRuchy()[posX][posY]==5) {
-                System.out.println("bicie");
                 koniecGry(source);
             }
             remove(figury[aktX][aktY]);
@@ -123,14 +123,12 @@ public class Plansza extends JPanel implements MouseListener {
             figury[posX][posY].setEnabled(false);
             add(figury[posX][posY], 2);    
             if (aktualnaFigura.getRuchy()[posX][posY]==5) {
-                System.out.println("bicie");
                 koniecGry(source);
             } else {
                 aktualnaFigura = null;
-
                 zmianaKolejki();
                 validate();
-            }           
+            }    
         } else if (source.getIdGracza()==1 || source.getIdGracza()==2){
             if (source.isStan()==false) {
                 
@@ -171,13 +169,99 @@ public class Plansza extends JPanel implements MouseListener {
     @Override
     public void mouseExited(MouseEvent me) {
     }
+    
     public void zmianaKolejki() {
         if (this.czyKolejBialego==true) {
+            sprawdzSzacha(true);
             this.czyKolejBialego = false;
+            if (sprawdzCzyJestRuch(czyKolejBialego)==false) {
+                koniecGry(new Figura(new Point(0, 0), 2, "btower", this));
+            }
             ustawListenerCzarnych(this);
         } else {
+            sprawdzSzacha(false);
             this.czyKolejBialego=true;
+            if (sprawdzCzyJestRuch(czyKolejBialego)==false) {
+                koniecGry(new Figura(new Point(0, 0), 1, "wtower", this));
+            }
             ustawListenerBialych(this);
+        }
+    }
+    private boolean sprawdzCzyJestRuch(boolean czyKolejBialego) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (czyKolejBialego==false) {
+                    if (figury[i][j].getIdGracza()==2) {
+                        figury[i][j].ustalRuch(figury);
+                        int[][] ruch = figury[i][j].getRuchy();
+                        for (int k = 0; k < 8; k++) {
+                            for (int l = 0; l < 8; l++) {
+                                if (ruch[k][l]!=0) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (figury[i][j].getIdGracza()==1) {
+                        figury[i][j].ustalRuch(figury);
+                        int[][] ruch = figury[i][j].getRuchy();
+                        for (int k = 0; k < 8; k++) {
+                            for (int l = 0; l < 8; l++) {
+                                if (ruch[k][l]!=0) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    private void sprawdzSzacha(boolean czyKolejBialego) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (czyKolejBialego) {
+                    if (figury[i][j].getIdGracza()==1) {
+                        int[][] ruch = figury[i][j].ustalRuchyBezSzacha(figury);
+                        for (int k = 0; k < 8; k++) {
+                            for (int l = 0; l < 8; l++) {
+                                if (ruch[k][l]==5) {
+                                    figury[k][l].setIcon(figury[k][l].obrazekBicia);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    for (int k = 0; k < 8; k++) {
+                        for (int l = 0; l < 8; l++) {
+                            if (figury[k][l].getNazwa()!=null && figury[k][l].getNazwa().endsWith("king")) {
+                                figury[k][l].setIcon(figury[k][l].obrazek);
+                            }
+                        }
+                    }
+                } else {
+                    if (figury[i][j].getIdGracza()==2) {
+                        int[][] ruch = figury[i][j].ustalRuchyBezSzacha(figury);
+                        for (int k = 0; k < 8; k++) {
+                            for (int l = 0; l < 8; l++) {
+                                if (ruch[k][l]==5) {
+                                    figury[k][l].setIcon(figury[k][l].obrazekBicia);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    for (int k = 0; k < 8; k++) {
+                        for (int l = 0; l < 8; l++) {
+                            if (figury[k][l].getNazwa()!=null && figury[k][l].getNazwa().endsWith("king")) {
+                                figury[k][l].setIcon(figury[k][l].obrazek);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     public void usunListenerBialych(MouseListener ml) {
@@ -219,6 +303,16 @@ public class Plansza extends JPanel implements MouseListener {
             }
         }
     }
+    public void podswietlPustePola(int pola[][]) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (pola[i][j]==1) {
+                    figury[i][j].setOpaque(true);
+                    figury[i][j].setBackground(Color.yellow);
+                }
+            }
+        }
+    }
     public void wygasPola(int pola[][]) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -229,7 +323,7 @@ public class Plansza extends JPanel implements MouseListener {
             }
         }
     }
-    public void podswietlBicia(int pola[][]) {                  //sprawdzic
+    public void podswietlBicia(int pola[][]) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (pola[i][j]==4) {
@@ -242,7 +336,7 @@ public class Plansza extends JPanel implements MouseListener {
             }
         }
     }
-    public void wygasBicia(int pola[][]) {                  //sprawdzic
+    public void wygasBicia(int pola[][]) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (pola[i][j]==4) {
@@ -251,16 +345,6 @@ public class Plansza extends JPanel implements MouseListener {
                 } else if (pola[i][j]==5) {
                     figury[i][j].setEnabled(false);
                     figury[i][j].removeMouseListener(this);
-                }
-            }
-        }
-    }
-    public void podswietlPustePola(int pola[][]) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (pola[i][j]==1) {
-                    figury[i][j].setOpaque(true);
-                    figury[i][j].setBackground(Color.yellow);
                 }
             }
         }
@@ -324,11 +408,9 @@ public class Plansza extends JPanel implements MouseListener {
     public ImageIcon createImageIcon(String path) {
         URL imgURL = getClass().getResource(path);
         if (imgURL != null) {
-            System.err.println("Plik jest w" + path);
             return new ImageIcon(imgURL);
         }
         else {
-            System.err.println("Pliku nie ma w /src" + path);
             return null; 
         }
     }
@@ -338,11 +420,17 @@ public class Plansza extends JPanel implements MouseListener {
                 figury[i][j].removeMouseListener(this);
             }
         }
-        Icon obrazekWygranego = createImageIcon("/ikony/bialy.png");
+        Icon obrazekWygranego;
+        if (figura.getIdGracza()==1) {
+            obrazekWygranego = createImageIcon("/ikony/czarny.png");
+        } else {
+            obrazekWygranego = createImageIcon("/ikony/bialy.png");
+        }
         JLabel wygrany = new JLabel(obrazekWygranego);
         wygrany.setBounds(50, 125, 300, 150);
         add(wygrany, 2);
     }
+
 
 
 }

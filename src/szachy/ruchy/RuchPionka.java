@@ -52,10 +52,10 @@ public class RuchPionka {
             }
         } else {
             if (figura.getIdGracza()==1) {
-                if (plansza[x][y+1].getIdGracza()==0) {
+                if ( y<7 && plansza[x][y+1].getIdGracza()==0) {
                     ruchy[x][y+1] = 1;
                 }
-                if ((x<7) && (y<7) && (plansza[x+1][y+1].getIdGracza() == 2) && (plansza[x+1][y+1].getNazwa().equals("bking"))) {
+                if ((x<7) && (y<7) && (plansza[x+1][y+1].getIdGracza() == 2) && plansza[x+1][y+1].getNazwa().equals("bking")) {
                     ruchy[x+1][y+1] = 5;
                 } else if ((x<7) && (y<7) && (plansza[x+1][y+1].getIdGracza() == 2)) {
                     ruchy[x+1][y+1] = 4;
@@ -66,7 +66,7 @@ public class RuchPionka {
                     ruchy[x-1][y+1] = 4;
                 }
             } else if (figura.getIdGracza()==2) {
-                if (plansza[x][y-1].getIdGracza()==0) {
+                if (y>0 && plansza[x][y-1].getIdGracza()==0) {
                     ruchy[x][y-1] = 1;
                 }
                 if ((x>0) && (y>0) && (plansza[x-1][y-1].getIdGracza() == 1) && (plansza[x-1][y-1].getNazwa().equals("wking"))) {
@@ -76,7 +76,7 @@ public class RuchPionka {
                 }
                 if ((x<7) && (y>0) && (plansza[x+1][y-1].getIdGracza() == 1) && (plansza[x+1][y-1].getNazwa().equals("wking"))) {
                     ruchy[x+1][y-1] = 5;
-                } else if ((x>0) && (y>0) && (plansza[x+1][y-1].getIdGracza() == 1)) {
+                } else if ((x<7) && (y>0) && (plansza[x+1][y-1].getIdGracza() == 1)) {
                     ruchy[x+1][y-1] = 4;
                 }
             }
